@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bate-Papo Seguro</title>
+    <script>
+        async function sendMessage() {
+            const message = document.getElementById("messageInput").value;
+            const response = await fetch('http://localhost:5000/send_message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: message })
+            });
+            const data = await response.json();
+            document.getElementById("encryptedMessage").textContent = data.encrypted_message;
+        }
+
+        async function receiveMessage() {
+            const encryptedMessage = document.getElementById("encryptedMessage").textContent;
+            const response = await fetch('http://localhost:5000/receive_message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ encrypted_message: encryptedMessage })
+            });
+            const data = await response.json();
+            document.getElementById("decryptedMessage").textContent = data.decrypted_message;
+        }
+    </script>
+</head>
+<body>
+    <h1>Bate-Papo</h1>
+    <input type="text" id="messageInput" placeholder="Digite sua mensagem">
+    <button onclick="sendMessage()">Enviar</button>
+    <h2>Mensagem Criptografada:</h2>
+    <p id="encryptedMessage"></p>
+    <button onclick="receiveMessage()">Descriptografar</button>
+    <h2>Mensagem Descriptografada:</h2>
+    <p id="decryptedMessage"></p>
+</body>
+</html>
